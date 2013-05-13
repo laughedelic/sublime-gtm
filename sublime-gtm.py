@@ -1,18 +1,16 @@
 import sublime, sublime_plugin
 import subprocess
-import os.path
-import os
-import re
+import os, os.path, re
 
 def strip_ansi_codes(s):
 	return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', s)
 
-def status(view):
+def call_gtm(view, cmd):
 	filename = view.file_name()
 	if filename:
 		dir = os.path.dirname(filename)
 		env = os.environ
-		gtm_p = subprocess.Popen('gtm status -s'
+		gtm_p = subprocess.Popen('gtm ' + cmd
 			, cwd=dir
 			, env=env
 			, shell=True
@@ -20,10 +18,15 @@ def status(view):
 		exit_code = gtm_p.wait()
 		# print(exit_code)
 		if exit_code == 0: 
-			out = strip_ansi_codes(gtm_p.communicate()[0].decode("utf-8"))
-			status = out.replace('[on]','  [ON]').replace('[off]','  [OFF]')
-			view.set_status('gtm', 'gtm: ' + status)
-		else: view.erase_status('gtm')
+			return strip_ansi_codes(gtm_p.communicate()[0].decode("utf-8"))
+		else: return None
+
+def status(view):
+	stat = call_gtm(view, 'status --short')
+	if stat == None: view.erase_status('gtm')
+	else: 
+		status = stat.replace('[on]','  [ON]').replace('[off]','  [OFF]')
+		view.set_status('gtm', 'gtm: ' + status)
 
 class GtmListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
@@ -34,3 +37,8 @@ class GtmListener(sublime_plugin.EventListener):
 		status(view)
 	def on_activated_async(self, view):
 		status(view)
+
+class GtmCommand(sublime_plugin.WindowCommand):
+	def run(self, cmd):
+		print('gtm ' + cmd + ':')
+		print(call_gtm(self.window.active_view(), cmd))

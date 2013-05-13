@@ -1,0 +1,12 @@
+[
+    {
+        "caption": "gtm: start timer",
+        "command": "gtm", "args": {"cmd": "start"}
+    },{
+        "caption": "gtm: stop timer",
+        "command": "gtm", "args": {"cmd": "stop"}
+    },{
+        "caption": "gtm: task info",
+        "command": "gtm", "args": {"cmd": "info"}
+    }
+]
