@@ -5,8 +5,8 @@
     },{
         "caption": "gtm: stop timer",
         "command": "gtm", "args": {"cmd": "stop"}
-    },{
-        "caption": "gtm: task info",
-        "command": "gtm", "args": {"cmd": "info"}
+    // },{
+    //     "caption": "gtm: list tasks",
+    //     "command": "gtm_list"
     }
 ]
