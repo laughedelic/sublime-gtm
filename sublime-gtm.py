@@ -57,7 +57,9 @@ class GtmCommand(sublime_plugin.WindowCommand):
 	def run(self, cmd):
 		print('gtm ' + cmd + ':')
 		try:
-			print(call_gtm(self.window.active_view(), cmd))
+			v = self.window.active_view()
+			print(call_gtm(v, cmd))
+			status(v)
 		except Exception as err:
 			sublime.error_message(str(err))
 
