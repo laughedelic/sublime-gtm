@@ -36,14 +36,22 @@ def status(view):
 		view.set_status('gtm', 'gtm: ' + status)
 
 class GtmListener(sublime_plugin.EventListener):
-	def on_post_save_async(self, view):
-		status(view)
-	def on_modified_async(self, view):
-		status(view)
-	def on_selection_modified_async(self, view):
-		status(view)
-	def on_activated_async(self, view):
-		status(view)
+	if sys.version.split('.')[0] == '2':
+		def on_post_save(self, view):
+			status(view)
+		# def on_modified(self, view):
+		# 	status(view)
+		def on_activated(self, view):
+			status(view)
+	else:
+		def on_post_save_async(self, view):
+			status(view)
+		def on_modified_async(self, view):
+			status(view)
+		def on_selection_modified_async(self, view):
+			status(view)
+		def on_activated_async(self, view):
+			status(view)
 
 class GtmCommand(sublime_plugin.WindowCommand):
 	def run(self, cmd):
